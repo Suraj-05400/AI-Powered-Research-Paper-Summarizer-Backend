@@ -1,0 +1,90 @@
+2026-03-16 07:00:50,771 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\Dell\OneDrive\Desktop\Research_Paper_Project\Backend\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-16 07:01:19,411 - app.services.summarization_service - ERROR - Error in LLM summarization: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2026-03-16 07:01:20,020 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2026-03-16 07:01:20,021 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-16 07:01:29,312 - app.services.embedding_service - INFO - Creating embeddings for 35 chunks...
+2026-03-16 07:01:48,958 - app.services.embedding_service - INFO - Embeddings created with shape: (35, 384)
+2026-03-16 07:04:11,916 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2026-03-16 07:04:11,973 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-16 07:04:16,716 - app.services.embedding_service - INFO - Creating embeddings for 35 chunks...
+2026-03-16 07:04:35,426 - app.services.embedding_service - INFO - Embeddings created with shape: (35, 384)
+2026-03-16 07:04:35,462 - app.services.embedding_service - INFO - Building FAISS index...
+2026-03-16 07:04:35,469 - app.services.embedding_service - INFO - FAISS index created with 35 vectors
+2026-03-16 07:04:35,470 - app.services.qa_service - INFO - QA system initialized with 35 chunks
+2026-03-16 07:04:43,483 - app.services.qa_service - WARNING - Error generating answer with LLM: 'OpenAI' object has no attribute 'predict'
+2026-03-16 07:07:37,700 - app.services.summarization_service - ERROR - Error in LLM summarization: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2026-03-16 07:07:37,924 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2026-03-16 07:07:37,926 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-16 07:07:42,050 - app.services.embedding_service - INFO - Creating embeddings for 6 chunks...
+2026-03-16 07:07:47,081 - app.services.embedding_service - INFO - Embeddings created with shape: (6, 384)
+2026-03-16 09:13:16,880 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\Dell\OneDrive\Desktop\Research_Paper_Project\Backend\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-16 09:16:06,587 - app.services.summarization_service - ERROR - Error in LLM summarization: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2026-03-16 09:16:06,844 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2026-03-16 09:16:06,867 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-16 09:16:15,063 - app.services.embedding_service - INFO - Creating embeddings for 6 chunks...
+2026-03-16 09:16:22,389 - app.services.embedding_service - INFO - Embeddings created with shape: (6, 384)
+2026-03-16 09:18:20,072 - app.services.summarization_service - ERROR - Error in LLM summarization: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2026-03-16 09:18:20,911 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2026-03-16 09:18:20,978 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-16 09:18:25,963 - app.services.embedding_service - INFO - Creating embeddings for 35 chunks...
+2026-03-16 09:18:45,536 - app.services.embedding_service - INFO - Embeddings created with shape: (35, 384)
+2026-03-19 17:32:03,947 - app.services.summarization_service - ERROR - Error in LLM summarization: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2026-03-19 17:32:05,725 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2026-03-19 17:32:05,999 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-19 17:32:19,027 - app.services.embedding_service - INFO - Creating embeddings for 19 chunks...
+2026-03-19 17:33:00,437 - app.services.embedding_service - INFO - Embeddings created with shape: (19, 384)

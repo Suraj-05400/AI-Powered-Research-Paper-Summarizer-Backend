@@ -7,8 +7,8 @@ class UserRegister(BaseModel):
     email: EmailStr
     password: str
     confirm_password: str
-    full_name: Optional[str] = None
-    phone_number: Optional[str] = None
+    full_name: str
+    phone_number: str
 
 class UserLogin(BaseModel):
     email: EmailStr

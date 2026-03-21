@@ -13,10 +13,10 @@ from app.schemas.schemas import (
 from app.utils.auth import get_current_active_user
 from app.config import settings
 from app.services.document_processor import DocumentProcessor
-from services.summarization_service import SummarizationService
-from services.text_analyzer import TextAnalyzer
-from services.embedding_service import EmbeddingService
-from services.pdf_generator import PDFGeneratorService
+from app.services.summarization_service import SummarizationService
+from app.services.text_analyzer import TextAnalyzer
+from app.services.embedding_service import EmbeddingService
+from app.services.pdf_generator import PDFGeneratorService
 
 router = APIRouter(prefix="/api/papers", tags=["research papers"])
 

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from app.database import get_db
@@ -12,7 +13,7 @@ from app.config import settings
 
 router = APIRouter(prefix="/api/auth", tags=["authentication"])
 
-@router.post("/register", response_model=UserResponse)
+@router.post("/register/", response_model=Token)
 async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     """Register a new user"""
     
@@ -51,7 +52,18 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     
-    return new_user
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": new_user.email},
+        expires_delta=access_token_expires
+    )
+    
+    # Return both the user AND the token
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": new_user
+    }
 
 @router.post("/login", response_model=Token)
 async def login(user_data: UserLogin, db: Session = Depends(get_db)):
@@ -157,3 +169,63 @@ async def change_password(
     db.commit()
     
     return {"message": "Password changed successfully"}
+@router.get("/google")
+async def google_login():
+    """
+    Handle Google Auth Redirection
+    URL: GET http://localhost:8000/api/auth/google
+    """
+
+    google_auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
+    
+    return RedirectResponse(url=google_auth_url)
+
+@router.get("/github")
+async def github_login():
+    """
+    Handle GitHub Auth Redirection
+    URL: GET http://localhost:8000/api/auth/github
+    """
+    github_auth_url = "https://github.com/login/oauth/authorize"
+    
+    return RedirectResponse(url=github_auth_url)
+
+@router.get("/google/callback")
+async def google_callback(code: str, db: Session = Depends(get_db)):
+    """
+    Step 2: Google redirects here with a 'code'
+    URL: http://localhost:8000/api/auth/google/callback
+    """
+    # In a real app, you'd exchange 'code' for user info.
+    # For your project demo, we can simulate a successful login:
+    test_email = "google_user@gmail.com"
+    user = db.query(User).filter(User.email == test_email).first()
+    
+    if not user:
+        # Create a new user if they don't exist
+        user = User(
+            email=test_email,
+            full_name="Google User",
+            is_verified=True
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+    # Create a JWT token for them
+    access_token = create_access_token(data={"sub": user.email})
+    
+    # Redirect back to your React Frontend Dashboard with the token
+    # We pass the token in the URL so React can grab it
+    frontend_url = f"http://localhost:5173/login?token={access_token}"
+    return RedirectResponse(url=frontend_url)
+
+@router.get("/github/callback")
+async def github_callback(code: str, db: Session = Depends(get_db)):
+    """
+    Step 2: GitHub redirects here
+    URL: http://localhost:8000/api/auth/github/callback
+    """
+    # Similar logic for GitHub...
+    frontend_url = "http://localhost:5173/login?status=success"
+    return RedirectResponse(url=frontend_url)
