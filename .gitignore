@@ -1,0 +1,17 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*
+# Python temporary files
+__pycache__/
+*.pyc
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Logs and Papers (IMPORTANT!)
+logs/
+uploadedpapers/
+
+# Secret Keys
+.env
