@@ -14,6 +14,10 @@ from app.database import init_db
 setup_logging()
 logger = logging.getLogger(__name__)
 
+nltk_data_path = os.path.join(os.getcwd(), "nltk_data")
+if nltk_data_path not in nltk.data.path:
+    nltk.data.path.append(nltk_data_path)
+
 # Create FastAPI app
 app = FastAPI(
     title="AI Research Paper Analyzer",
