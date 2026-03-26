@@ -227,5 +227,8 @@ async def github_callback(code: str, db: Session = Depends(get_db)):
     URL: http://localhost:8000/api/auth/github/callback
     """
     # Similar logic for GitHub...
-    frontend_url = "http://localhost:5173/login?status=success"
+    # frontend_url = "http://localhost:5173/login?status=success"
+    # In auth.py
+    frontend_base = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    frontend_url = f"{frontend_base}/login?token={access_token}"
     return RedirectResponse(url=frontend_url)
