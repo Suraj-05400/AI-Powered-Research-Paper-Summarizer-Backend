@@ -58,5 +58,37 @@ class EmbeddingService:
         except Exception as e:
             logger.error(f"Error during search: {e}")
             raise
+    def save_index(self, index: faiss.IndexFlatL2, chunks: List[str], save_path: str):
+        """Save FAISS index and chunks to disk"""
+        try:
+            os.makedirs(save_path, exist_ok=True)
+            
+            # Save FAISS index
+            faiss.write_index(index, os.path.join(save_path, "index.faiss"))
+            
+            # Save chunks
+            with open(os.path.join(save_path, "chunks.pkl"), 'wb') as f:
+                pickle.dump(chunks, f)
+            
+            logger.info(f"Index and chunks saved to {save_path}")
+        except Exception as e:
+            logger.error(f"Error saving index: {e}")
+            raise
+    
+    def load_index(self, save_path: str) -> tuple:
+        """Load FAISS index and chunks from disk"""
+        try:
+            # Load FAISS index
+            index = faiss.read_index(os.path.join(save_path, "index.faiss"))
+            
+            # Load chunks
+            with open(os.path.join(save_path, "chunks.pkl"), 'rb') as f:
+                chunks = pickle.load(f)
+            
+            logger.info(f"Index and chunks loaded from {save_path}")
+            return index, chunks
+        except Exception as e:
+            logger.error(f"Error loading index: {e}")
+            raise
 
     # ... keep your save_index and load_index methods as they are ...
