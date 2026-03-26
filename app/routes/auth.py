@@ -13,7 +13,7 @@ from app.config import settings
 
 router = APIRouter(prefix="/api/auth", tags=["authentication"])
 
-@router.post("/register/", response_model=Token)
+@router.post("/register", response_model=Token)
 async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     """Register a new user"""
     
