@@ -217,7 +217,7 @@ async def google_callback(code: str, db: Session = Depends(get_db)):
     
     # Redirect back to your React Frontend Dashboard with the token
     # We pass the token in the URL so React can grab it
-    frontend_url = f"http://localhost:5173/login?token={access_token}"
+    frontend_url = f"https://https://researchpaperpro.netlify.app/login?token={access_token}"
     return RedirectResponse(url=frontend_url)
 
 @router.get("/github/callback")
@@ -229,6 +229,6 @@ async def github_callback(code: str, db: Session = Depends(get_db)):
     # Similar logic for GitHub...
     # frontend_url = "http://localhost:5173/login?status=success"
     # In auth.py
-    frontend_base = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    frontend_base = os.getenv("FRONTEND_URL", https://researchpaperpro.netlify.app)#"https://localhost:5173")
     frontend_url = f"{frontend_base}/login?token={access_token}"
     return RedirectResponse(url=frontend_url)
