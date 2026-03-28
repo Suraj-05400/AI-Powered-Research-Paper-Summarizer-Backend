@@ -172,14 +172,16 @@ async def change_password(
     return {"message": "Password changed successfully"}
 @router.get("/google")
 async def google_login():
+    
     """
     Handle Google Auth Redirection
     URL: GET http://localhost:8000/api/auth/google
     """
-
-    google_auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
-    
-    return RedirectResponse(url=google_auth_url)
+    from urllib.parse import urlencode
+    params = urlencode({"client_id": settings.GOOGLE_CLIENT_ID, "redirect_uri": "...", "scope": "openid email profile", "response_type": "code"})
+      return RedirectResponse(url=f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
+    #google_auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
+    #return RedirectResponse(url=google_auth_url)
 
 @router.get("/github")
 async def github_login():
