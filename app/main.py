@@ -65,14 +65,14 @@ app.include_router(search.router)
 app.include_router(analytics.router)
 app.include_router(translation.router)
 
-async def root():
+'''async def root():
     """Root endpoint"""
     return {
         "message": "AI Research Paper Analyzer API",
         "version": "1.0.0",
         "docs": "/docs",
         "redoc": "/redoc"
-    }
+    }'''
 
 @app.get("/health")
 async def health_check():
