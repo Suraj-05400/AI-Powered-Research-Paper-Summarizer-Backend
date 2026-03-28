@@ -3,6 +3,30 @@ from typing import Optional
 import os
 
 class Settings(BaseSettings):
+    # Fix: Use os.getenv to provide a fallback so it's never "None"
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./research_analyzer.db")
+    
+    # Fix: Provide a default string so Pydantic doesn't complain if Env Var is missing
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "temporary_dev_key_12345")
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    
+    # Use Optional for things that can actually be None
+    OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY", None)
+    
+    # Add defaults for everything else
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+    
+    class Config:
+        env_file = ".env"
+        extra = "ignore" # This tells Pydantic to ignore extra env vars it doesn't recognize
+        
+'''
+from pydantic_settings import BaseSettings
+from typing import Optional
+import os
+
+class Settings(BaseSettings):
     # Database: Use Environment variable for Render (Postgres), fallback to SQLite for local
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./research_analyzer.db")
     
@@ -36,7 +60,9 @@ class Settings(BaseSettings):
         case_sensitive = True
 
 settings = Settings()
-'''from pydantic_settings import BaseSettings
+'''
+'''
+from pydantic_settings import BaseSettings
 from typing import Optional
 
 class Settings(BaseSettings):
@@ -72,4 +98,5 @@ class Settings(BaseSettings):
         env_file =".env"
         case_sensitive = True
 
-settings = Settings()'''
+settings = Settings()
+'''
