@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import User, ResearchPaper, QASession, QAQuestion
+from app.models import User, ResearchPaper, QASession, QAQuestion, PaperChunk
 from app.schemas.schemas import QAQuestionResponse, QASessionResponse, QAQuestionCreate
 from app.utils.auth import get_current_active_user
 from app.services.qa_service import QAService
@@ -70,9 +70,10 @@ async def ask_question(
     
     # Get paper and chunks
     paper = db.query(ResearchPaper).filter(ResearchPaper.id == paper_id).first()
-    chunks = db.query(__import__('app.models', fromlist=['PaperChunk']).PaperChunk).filter(
-        __import__('app.models', fromlist=['PaperChunk']).PaperChunk.paper_id == paper_id
-    ).all()
+    chunks = db.query(PaperChunk).filter(PaperChunk.paper_id == paper_id).all()
+    #chunks = db.query(__import__('app.models', fromlist=['PaperChunk']).PaperChunk).filter(
+    #         __import__('app.models', fromlist=['PaperChunk']).PaperChunk.paper_id == paper_id
+    #         ).all()
     
     if not chunks:
         raise HTTPException(
