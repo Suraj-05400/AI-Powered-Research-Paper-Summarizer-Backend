@@ -1,6 +1,7 @@
 import logging
 from typing import List, Optional, Tuple, TYPE_CHECKING
 import os
+from app.models import User, ResearchPaper, QASession, QAQuestion, PaperChunk
 
 if TYPE_CHECKING:
     from app.services.embedding_service import EmbeddingService
