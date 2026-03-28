@@ -9,7 +9,7 @@ from app.database import init_db
 from app.config import settings
 from app.utils.helpers import setup_logging, create_upload_directory
 from app.routes import auth, papers, qa, search, analytics, translation
-from app.database import init_db
+#from app.database import init_db
 
 # Setup logging
 setup_logging()
