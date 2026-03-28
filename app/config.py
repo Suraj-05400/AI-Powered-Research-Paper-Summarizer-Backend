@@ -1,3 +1,4 @@
+'''
 from pydantic_settings import BaseSettings
 from typing import Optional
 import os
@@ -20,7 +21,8 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         extra = "ignore" # This tells Pydantic to ignore extra env vars it doesn't recognize
-        
+
+'''
 '''
 from pydantic_settings import BaseSettings
 from typing import Optional
@@ -61,7 +63,7 @@ class Settings(BaseSettings):
 
 settings = Settings()
 '''
-'''
+
 from pydantic_settings import BaseSettings
 from typing import Optional
 
@@ -99,4 +101,3 @@ class Settings(BaseSettings):
         case_sensitive = True
 
 settings = Settings()
-'''
