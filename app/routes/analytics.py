@@ -4,7 +4,7 @@ from sqlalchemy import func
 from typing import List, Dict, Any
 from datetime import datetime, timedelta
 from app.database import get_db
-from app.models import User, ResearchPaper, QAQuestion
+from app.models import User, ResearchPaper, QAQuestion, QASession
 from app.utils.auth import get_current_active_user
 from app.schemas.schemas import UserAnalytics
 
@@ -78,11 +78,14 @@ async def get_paper_analytics(
         raise HTTPException(status_code=404, detail="Paper not found")
     
     # QA questions for this paper
-    qa_count = db.query(func.count(QAQuestion.id)).join(
-        __import__('app.models', fromlist=['QASession']).QASession
-    ).filter(
-        __import__('app.models', fromlist=['QASession']).QASession.paper_id == paper_id
+    #qa_count = db.query(func.count(QAQuestion.id)).join(
+    qa_count = db.query(func.count(QAQuestion.id)).join(QASession).filter(
+      QASession.paper_id == paper_id
     ).scalar() or 0
+    #    __import__('app.models', fromlist=['QASession']).QASession
+    #).filter(
+    #   __import__('app.models', fromlist=['QASession']).QASession.paper_id == paper_id
+    #).scalar() or 0
     
     return {
         "paper_id": paper_id,
