@@ -35,7 +35,7 @@ deep-translator==1.11.4
 reportlab==4.0.9
 
 # Database
-psycopg2-binary==2.9.9
+psycopg2-binary>=2.9.9
 
 # API & Utilities
 requests==2.31.0
