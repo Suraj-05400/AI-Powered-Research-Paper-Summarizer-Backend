@@ -179,7 +179,7 @@ async def google_login():
     """
     from urllib.parse import urlencode
     params = urlencode({"client_id": settings.GOOGLE_CLIENT_ID, "redirect_uri": "...", "scope": "openid email profile", "response_type": "code"})
-      return RedirectResponse(url=f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
+    return RedirectResponse(url=f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
     #google_auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
     #return RedirectResponse(url=google_auth_url)
 
