@@ -67,11 +67,23 @@ settings = Settings()
 from pydantic_settings import BaseSettings
 from typing import Optional
 import secrets
+import os
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "sqlite:///./research_analyzer.db"
-    
+    #DATABASE_URL: str = "sqlite:///./research_analyzer.db"
+    raw_database_url: str = os.getenv(
+        "DATABASE_URL", 
+        "sqlite:///./research_analyzer.db"
+    )
+
+    @property
+    def DATABASE_URL(self) -> str:
+        # CRITICAL FIX FOR RENDER: 
+        # Render provides 'postgres://', but SQLAlchemy requires 'postgresql://'
+        if self.raw_database_url.startswith("postgres://"):
+            return self.raw_database_url.replace("postgres://", "postgresql://", 1)
+        return self.raw_database_url
     # JWT
     SECRET_KEY: str = secrets.token_hex(32) #"your-secret-key-change-in-production"
     ALGORITHM: str = "HS256"
