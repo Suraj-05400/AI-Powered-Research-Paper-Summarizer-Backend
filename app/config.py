@@ -66,6 +66,7 @@ settings = Settings()
 
 from pydantic_settings import BaseSettings
 from typing import Optional
+import secrets
 
 class Settings(BaseSettings):
     # Database
