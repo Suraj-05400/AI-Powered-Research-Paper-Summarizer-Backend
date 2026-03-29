@@ -8,7 +8,9 @@ import os
 load_dotenv()
 
 DATABASE_URL = settings.DATABASE_URL
-
+# Fix Render's postgres:// prefix
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 # Create database engine
 if DATABASE_URL.startswith("sqlite"):
     engine = create_engine(
