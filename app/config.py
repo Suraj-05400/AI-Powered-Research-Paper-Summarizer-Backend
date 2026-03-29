@@ -85,7 +85,8 @@ class Settings(BaseSettings):
             return self.raw_database_url.replace("postgres://", "postgresql://", 1)
         return self.raw_database_url
     # JWT
-    SECRET_KEY: str = secrets.token_hex(32) #"your-secret-key-change-in-production"
+    #SECRET_KEY: str = secrets.token_hex(32) #"your-secret-key-change-in-production"
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-change-in-render-env-vars")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
