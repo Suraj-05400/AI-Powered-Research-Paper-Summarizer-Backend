@@ -5,7 +5,8 @@ from app.database import get_db
 from app.models import User, ResearchPaper, PaperChunk
 from app.schemas.schemas import SemanticSearchQuery, SemanticSearchResponse, SemanticSearchResult
 from app.utils.auth import get_current_active_user
-import app.services.embedding_service as EmbeddingService  # type: ignore
+from app.services.embedding_service import EmbeddingService
+#import app.services.embedding_service as EmbeddingService  # type: ignore
 
 router = APIRouter(prefix="/api/search", tags=["search"])
 
