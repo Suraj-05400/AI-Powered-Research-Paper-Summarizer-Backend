@@ -53,6 +53,11 @@ app.add_middleware(
 def root():
     return {"message": "Research Paper Project Backend is running with SQLite!"}
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy"}
+
 # Initialize database
 init_db()
 create_upload_directory()
@@ -74,10 +79,11 @@ app.include_router(translation.router)
         "redoc": "/redoc"
     }'''
 
+'''
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "healthy"}
+    return {"status": "healthy"}'''
 
 if __name__ == "__main__":
     import uvicorn
