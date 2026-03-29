@@ -232,6 +232,6 @@ async def github_callback(code: str, db: Session = Depends(get_db)):
     # Similar logic for GitHub...
     # frontend_url = "http://localhost:5173/login?status=success"
     # In auth.py
-    frontend_base = os.getenv("FRONTEND_URL", https://researchpaperpro.netlify.app)#"https://localhost:5173")
+    frontend_base = os.getenv("FRONTEND_URL", "https://researchpaperpro.netlify.app")#"https://localhost:5173")
     frontend_url = f"{frontend_base}/login?token={access_token}"
     return RedirectResponse(url=frontend_url)
