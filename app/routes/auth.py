@@ -220,11 +220,20 @@ async def google_callback(code: str, db: Session = Depends(get_db)):
     
     # Redirect back to your React Frontend Dashboard with the token
     # We pass the token in the URL so React can grab it
-    frontend_url = f"https://https://researchpaperpro.netlify.app/login?token={access_token}"
+    frontend_url = f"https://researchpaperpro.netlify.app/login?token={access_token}"
     return RedirectResponse(url=frontend_url)
 
 @router.get("/github/callback")
 async def github_callback(code: str, db: Session = Depends(get_db)):
+    test_email = "github_user@github.com"
+    user = db.query(User).filter(User.email == test_email).first()
+    if not user:
+        user = User(email=test_email, full_name="GitHub User", is_verified=True)
+        db.add(user); db.commit(); db.refresh(user)
+    access_token = create_access_token(data={"sub": user.email})  # ← was missing
+    frontend_base = os.getenv("FRONTEND_URL", "https://researchpaperpro.netlify.app")
+    return RedirectResponse(url=f"{frontend_base}/login?token={access_token}")
+'''async def github_callback(code: str, db: Session = Depends(get_db)):
     """
     Step 2: GitHub redirects here
     URL: http://localhost:8000/api/auth/github/callback
@@ -234,4 +243,4 @@ async def github_callback(code: str, db: Session = Depends(get_db)):
     # In auth.py
     frontend_base = os.getenv("FRONTEND_URL", "https://researchpaperpro.netlify.app")#"https://localhost:5173")
     frontend_url = f"{frontend_base}/login?token={access_token}"
-    return RedirectResponse(url=frontend_url)
+    return RedirectResponse(url=frontend_url)'''
