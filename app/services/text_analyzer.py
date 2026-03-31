@@ -64,7 +64,7 @@ class TextAnalyzer:
             
             # Create topics from top words with their frequencies
             topics = []
-            for word, freq in word_freq[:10]:
+            for word, freq in list(word_freq.items())[:10]:
                 topics.append({
                     "topic": word,
                     "frequency": freq,
