@@ -22,6 +22,127 @@ router = APIRouter(prefix="/api/papers", tags=["research papers"])
 
 # Initialize document processor (lightweight service)
 doc_processor = DocumentProcessor()
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, BackgroundTasks
+# ... (keep your other imports the same)
+
+# --- NEW BACKGROUND WORKER FUNCTION ---
+def perform_heavy_ai_tasks(paper_id: int, raw_text: str, chunks: list):
+    """
+    This function runs in the background. 
+    It handles the heavy RAM-consuming tasks.
+    """
+    # Create a new standalone DB session for the background thread
+    db = next(get_db())
+    try:
+        # 1. Generate summary (Moved from main route)
+        summarizer = SummarizationService()
+        summary = summarizer.summarize(raw_text, max_length=500)
+        
+        # 2. Extract key findings (Moved from main route)
+        text_analyzer = TextAnalyzer()
+        key_findings = text_analyzer.extract_key_findings(raw_text, num_findings=5)
+        
+        # 3. Create embeddings (Moved from main route)
+        embedding_service = EmbeddingService()
+        embedding_service.create_embeddings(chunks)
+
+        # 4. Update the database record once AI is done
+        paper = db.query(ResearchPaper).filter(ResearchPaper.id == paper_id).first()
+        if paper:
+            paper.summary = summary
+            paper.key_findings = key_findings
+            paper.summary_length = len(summary.split())
+            db.commit()
+            print(f"AI Processing complete for Paper ID: {paper_id}")
+    except Exception as e:
+        print(f"❌ Background Task Error: {e}")
+    finally:
+        db.close()
+
+@router.post("/upload", response_model=ResearchPaperResponse)
+async def upload_paper(
+    background_tasks: BackgroundTasks, # <-- ADDED THIS
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    try:
+        # --- PHASE 1: FILE VALIDATION & SAVING (KEEP THIS) ---
+        is_valid, message = doc_processor.validate_file(file.filename, file.size)
+        if not is_valid:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=message)
+        
+        os.makedirs(settings.UPLOAD_DIRECTORY, exist_ok=True)
+        file_extension = Path(file.filename).suffix.lower()
+        unique_filename = f"{current_user.id}_{int(time.time())}{file_extension}"
+        file_path = os.path.join(settings.UPLOAD_DIRECTORY, unique_filename)
+        
+        with open(file_path, "wb") as f:
+            contents = await file.read()
+            f.write(contents)
+        
+        # --- PHASE 2: TEXT EXTRACTION (FAST) ---
+        raw_text = doc_processor.extract_text(file_path)
+        word_count = doc_processor.get_word_count(raw_text)
+        chunks = doc_processor.chunk_text(raw_text, chunk_size=500)
+        
+        # -------------------------------------------------------
+        # COMMENTED OUT PREVIOUS SLOW CODE (Caused 502 Errors)
+        # -------------------------------------------------------
+        # summarizer = SummarizationService()
+        # summary = summarizer.summarize(raw_text, max_length=500)
+        # text_analyzer = TextAnalyzer()
+        # key_findings = text_analyzer.extract_key_findings(raw_text, num_findings=5)
+        # embedding_service = EmbeddingService()
+        # embedding_service.create_embeddings(chunks)
+        # -------------------------------------------------------
+
+        # --- PHASE 3: QUICK DB SAVE (STUB DATA) ---
+        paper = ResearchPaper(
+            user_id=current_user.id,
+            title=Path(file.filename).stem,
+            original_filename=file.filename,
+            file_path=file_path,
+            file_size=file.size,
+            file_type=file_extension.lstrip('.'),
+            raw_content=raw_text,
+            word_count=word_count,
+            chunks_count=len(chunks),
+            chunk_size=500,
+            memory_used=file.size / (1024 * 1024),
+            processing_time=0.0,
+            summary="Analyzing...", # Default text while AI runs
+            key_findings=[],       # Empty list while AI runs
+            extra_metadata={}
+        )
+        
+        db.add(paper)
+        db.flush() # Get the paper ID
+
+        # Save chunks quickly
+        for idx, chunk in enumerate(chunks):
+            db.add(PaperChunk(paper_id=paper.id, chunk_index=idx, content=chunk))
+        
+        db.commit()
+        db.refresh(paper)
+
+        # --- PHASE 4: TRIGGER BACKGROUND AI ---
+        # This sends the 200/202 response to the user immediately!
+        background_tasks.add_task(perform_heavy_ai_tasks, paper.id, raw_text, chunks)
+        
+        return paper
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+        
+'''def process_paper_ai(paper_id: int, file_path: str, db: Session):
+    try:
+        # Extract text, create embeddings, and generate summary here
+        # This now runs IN THE BACKGROUND
+        summarization_service.generate_summary(paper_id, file_path, db)
+    except Exception as e:
+        print(f"Background Task Error: {e}")
 
 @router.post("/upload", response_model=ResearchPaperResponse)
 async def upload_paper(
@@ -117,7 +238,7 @@ async def upload_paper(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error processing file: {str(e)}"
         )
-
+'''
 @router.get("/", response_model=List[ResearchPaperResponse])
 async def get_user_papers(
     current_user: User = Depends(get_current_active_user),
