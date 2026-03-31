@@ -63,7 +63,7 @@ class Settings(BaseSettings):
 
 settings = Settings()
 '''
-
+'''
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 from pydantic import model_validator
@@ -72,7 +72,7 @@ import os
 class Settings(BaseSettings):
     # Database
     #DATABASE_URL: str = "sqlite:///./research_analyzer.db"
-    '''raw_database_url: str = os.getenv(
+    raw_database_url: str = os.getenv(
         "DATABASE_URL", 
         "sqlite:///./research_analyzer.db"
     )
@@ -83,7 +83,7 @@ class Settings(BaseSettings):
     def fix_postgres_protocol(cls, v: str) -> str:
         if v.startswith("postgres://"):
             return v.replace("postgres://", "postgresql://", 1)
-        return v'''
+        return v
     #SECRET_KEY: str = secrets.token_hex(32) #"your-secret-key-change-in-production"
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./research_analyzer.db")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-change-in-render-env-vars")
@@ -112,5 +112,44 @@ class Settings(BaseSettings):
     class Config:
         env_file =".env"
         case_sensitive = True
+
+settings = Settings()
+'''
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import model_validator # Use model_validator instead
+from typing import Optional
+import os
+
+class Settings(BaseSettings):
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./research_analyzer.db")
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-dev-key-12345")
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    
+    OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY")
+    OPENAI_MODEL: str = "gpt-3.5-turbo"
+    
+    GOOGLE_CLIENT_ID: Optional[str] = os.getenv("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET: Optional[str] = os.getenv("GOOGLE_CLIENT_SECRET")
+    
+    MAX_UPLOAD_SIZE: int = 52428800  # 50MB
+    UPLOAD_DIRECTORY: str = "./uploadedpapers"
+    
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379")
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+
+    # This validator runs on the whole model after fields are set
+    @model_validator(mode="after")
+    def fix_postgres_protocol(self) -> "Settings":
+        if self.DATABASE_URL.startswith("postgres://"):
+            self.DATABASE_URL = self.DATABASE_URL.replace("postgres://", "postgresql://", 1)
+        return self
+
+    model_config = SettingsConfigDict(
+        env_file=".env", 
+        case_sensitive=True, 
+        extra="ignore" 
+    )
 
 settings = Settings()
