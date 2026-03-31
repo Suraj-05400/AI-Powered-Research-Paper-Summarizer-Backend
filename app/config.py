@@ -66,7 +66,7 @@ settings = Settings()
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
-import secrets
+from pydantic import field_validator
 import os
 
 class Settings(BaseSettings):
