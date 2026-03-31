@@ -66,13 +66,13 @@ settings = Settings()
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
-from pydantic import field_validator
+from pydantic import model_validator
 import os
 
 class Settings(BaseSettings):
     # Database
     #DATABASE_URL: str = "sqlite:///./research_analyzer.db"
-    raw_database_url: str = os.getenv(
+    '''raw_database_url: str = os.getenv(
         "DATABASE_URL", 
         "sqlite:///./research_analyzer.db"
     )
@@ -83,8 +83,9 @@ class Settings(BaseSettings):
     def fix_postgres_protocol(cls, v: str) -> str:
         if v.startswith("postgres://"):
             return v.replace("postgres://", "postgresql://", 1)
-        return v
+        return v'''
     #SECRET_KEY: str = secrets.token_hex(32) #"your-secret-key-change-in-production"
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./research_analyzer.db")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-change-in-render-env-vars")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
