@@ -77,14 +77,13 @@ class Settings(BaseSettings):
         "sqlite:///./research_analyzer.db"
     )
 
-    @property
-    def DATABASE_URL(self) -> str:
-        # CRITICAL FIX FOR RENDER: 
-        # Render provides 'postgres://', but SQLAlchemy requires 'postgresql://'
-        if self.raw_database_url.startswith("postgres://"):
-            return self.raw_database_url.replace("postgres://", "postgresql://", 1)
-        return self.raw_database_url
-    # JWT
+# CRITICAL FIX: This automatically converts postgres:// to postgresql://
+    @field_validator("DATABASE_URL", mode="after")
+    @classmethod
+    def fix_postgres_protocol(cls, v: str) -> str:
+        if v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql://", 1)
+        return v
     #SECRET_KEY: str = secrets.token_hex(32) #"your-secret-key-change-in-production"
     SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-change-in-render-env-vars")
     ALGORITHM: str = "HS256"
