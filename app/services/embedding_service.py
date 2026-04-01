@@ -39,14 +39,15 @@ class EmbeddingService:
             logger.error(f"Error creating embeddings: {e}")
             raise
             
+            
     def build_faiss_index(self, embeddings: np.ndarray) -> faiss.IndexFlatL2:
     """Build a FAISS index from embeddings"""
-    embeddings = embeddings.astype(np.float32)
-    dimension = embeddings.shape[1]
-    index = faiss.IndexFlatL2(dimension)
-    index.add(embeddings)
-    logger.info(f"FAISS index built with {index.ntotal} vectors")
-    return index
+        embeddings = embeddings.astype(np.float32)
+        dimension = embeddings.shape[1]
+        index = faiss.IndexFlatL2(dimension)
+        index.add(embeddings)
+        logger.info(f"FAISS index built with {index.ntotal} vectors")
+        return index
     
     def search(self, query: str, index: faiss.IndexFlatL2, chunks: List[str], k: int = 5) -> List[tuple]:
         """Search using the lazy-loaded model"""
