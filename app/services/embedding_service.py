@@ -41,7 +41,7 @@ class EmbeddingService:
             
             
     def build_faiss_index(self, embeddings: np.ndarray) -> faiss.IndexFlatL2:
-    """Build a FAISS index from embeddings"""
+        """Build a FAISS index from embeddings"""
         embeddings = embeddings.astype(np.float32)
         dimension = embeddings.shape[1]
         index = faiss.IndexFlatL2(dimension)
