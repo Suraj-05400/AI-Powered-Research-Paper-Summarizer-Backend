@@ -50,17 +50,21 @@ class SummarizationService:
     def _summarize_with_llm(self, text: str, max_length: int) -> str:
         """Summarize using LangChain with OpenAI"""
         try:
-            from langchain_community.llms import OpenAI
+            from langchain_openai import ChatOpenAI
+            #from langchain_community.llms import OpenAI
             from langchain_core.documents import Document
             from langchain_classic.chains.summarize import load_summarize_chain
             
-            llm = OpenAI(temperature=0, model_name=self.model_name, openai_api_key=self.api_key)
+            llm = ChatOpenAI(temperature=0, model=self.model_name, api_key=self.api_key)
             
             # Split text into documents
-            docs = [Document(page_content=text)]
+            #docs = [Document(page_content=text)]
+            safe_text = text[:30000]
+            docs = self.text_splitter.create_documents([safe_text])
             
             # Load summarization chain
-            chain = load_summarize_chain(llm, chain_type="stuff")
+            #chain = load_summarize_chain(llm, chain_type="stuff")
+            chain = load_summarize_chain(llm, chain_type="map_reduce")
             
             # Generate summary
             summary = chain.run(docs)
@@ -70,7 +74,7 @@ class SummarizationService:
             if len(summary.split()) > max_length:
                 summary = ' '.join(summary.split()[:max_length])
             
-            return summary
+            return summary.strip()
         except Exception as e:
             logger.error(f"Error in LLM summarization: {e}")
             return self._fallback_summarize(text, max_length)
